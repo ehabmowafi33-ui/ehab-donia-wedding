@@ -1,0 +1,11 @@
+
+const WEDDING_DATE=new Date("2026-09-06T20:00:00+03:00");
+const intro=document.getElementById("intro"),invitation=document.getElementById("invitation"),openButton=document.getElementById("openInvitation"),music=document.getElementById("bgMusic"),musicToggle=document.getElementById("musicToggle");
+function setMusicState(p){musicToggle.classList.toggle("paused",!p);musicToggle.querySelector(".music-label").textContent=p?"إيقاف الموسيقى":"تشغيل الموسيقى"}
+openButton.addEventListener("click",async()=>{intro.classList.add("opened");invitation.classList.add("visible");invitation.setAttribute("aria-hidden","false");document.body.style.overflow="auto";try{music.volume=.55;await music.play();setMusicState(true)}catch{setMusicState(false)}});
+musicToggle.addEventListener("click",async()=>{if(music.paused){try{await music.play();setMusicState(true)}catch{setMusicState(false)}}else{music.pause();setMusicState(false)}});
+function updateCountdown(){let d=WEDDING_DATE-new Date();if(d<=0){document.getElementById("countdown").innerHTML="<div style='grid-column:1/-1'><strong>يومنا وصل ❤️</strong><span>نستناكم تنورونا</span></div>";return}const days=Math.floor(d/86400000);d%=86400000;const h=Math.floor(d/3600000);d%=3600000;const m=Math.floor(d/60000),s=Math.floor(d%60000/1000);daysEl.textContent=String(days).padStart(2,"0");hours.textContent=String(h).padStart(2,"0");minutes.textContent=String(m).padStart(2,"0");seconds.textContent=String(s).padStart(2,"0")}
+const daysEl=document.getElementById("days");updateCountdown();setInterval(updateCountdown,1000);
+const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("show");ob.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll(".reveal").forEach(e=>ob.observe(e));
+document.getElementById("rsvpForm").addEventListener("submit",e=>{e.preventDefault();const n=document.getElementById("guestName").value.trim(),c=document.getElementById("guestCount").value,t=document.getElementById("guestNote").value.trim();const msg=["تأكيد حضور دعوة زفاف إيهاب ودنيا 💍",`الاسم: ${n}`,`عدد الحضور: ${c}`,t?`ملاحظة: ${t}`:"","موعدنا يوم 6 سبتمبر 2026 الساعة 8 مساءً."].filter(Boolean).join("\\n");window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,"_blank","noopener")});
+document.body.style.overflow="hidden";setMusicState(false);
